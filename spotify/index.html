@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic Meta -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spotify-Stats</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Discover your Spotify listening habits. See your top 10 songs and artists, and share your music stats with friends." />
+  <meta name="keywords" content="Spotify, Music Stats, Top Songs, Top Artists, Listening Habits, Spotify Wrapped, Music Analytics" />
+  <meta name="author" content="Samartha GS" />
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph (Facebook/LinkedIn) -->
+  <meta property="og:title" content="Spotify Stats - Discover Your Top Songs & Artists" />
+  <meta property="og:description" content="See your top 10 Spotify songs and artists. Discover your listening habits and share with friends." />
+  <meta property="og:image" content="https://i.ibb.co/sKbrkyn/Yellow-and-Grey-Pastel-Grunge-Designer-Brand-Logo-20241009-185202-0000.png" />
+  <meta property="og:url" content="https://samarthags.in/spotify" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Spotify Stats - Discover Your Top Songs & Artists" />
+  <meta name="twitter:description" content="See your top 10 Spotify songs and artists. Discover your listening habits and share with friends." />
+  <meta name="twitter:image" content="https://i.ibb.co/sKbrkyn/Yellow-and-Grey-Pastel-Grunge-Designer-Brand-Logo-20241009-185202-0000.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://i.ibb.co/sKbrkyn/Yellow-and-Grey-Pastel-Grunge-Designer-Brand-Logo-20241009-185202-0000.png" type="image/png">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Schema.org (Rich Snippets for Google) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Spotify Stats by Samartha GS",
+    "url": "https://samarthags.in/spotify",
+    "description": "Discover your Spotify listening habits. See your top 10 songs and artists.",
+    "applicationCategory": "MusicApplication",
+    "operatingSystem": "Web Browser",
+    "permissions": "browser",
+    "author": {
+      "@type": "Person",
+      "name": "Samartha GS"
+    },
+    "featureList": [
+      "Top 10 Songs",
+      "Top 10 Artists",
+      "Listening Statistics",
+      "Share with Friends",
+      "Spotify Integration"
+    ],
+    "screenshot": "https://i.ibb.co/sKbrkyn/Yellow-and-Grey-Pastel-Grunge-Designer-Brand-Logo-20241009-185202-0000.png"
+  }
+  </script>
+
+  <style>
+    :root {
+      --primary: #1DB954; /* Spotify green */
+      --secondary: #191414; /* Spotify black */
+      --accent: #1ED760; /* Spotify light green */
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --light-gray: #e9ecef;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.6;
+      color: var(--dark);
+      background: linear-gradient(135deg, #121212 0%, #282828 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: white;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 20px 0;
+    }
+    
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: white;
+      padding: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+      color: white;
+    }
+    
+    .spotify-text {
+      color: var(--primary);
+    }
+    
+    .tagline {
+      font-size: 1.2rem;
+      color: #b3b3b3;
+      margin-bottom: 30px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);
+      transition: all 0.3s ease;
+      margin: 20px 0;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(29, 185, 84, 0.6);
+      background: var(--accent);
+    }
+    
+    .features-section {
+      margin: 60px 0;
+    }
+    
+    .section-title {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 40px;
+      color: white;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    
+    .feature-card {
+      background: rgba(40, 40, 40, 0.8);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+      padding: 30px 20px;
+      border: 1px solid #333;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .feature-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .songs-icon {
+      color: var(--primary);
+    }
+    
+    .artists-icon {
+      color: #1ED760;
+    }
+    
+    .stats-icon {
+      color: #b49bc8;
+    }
+    
+    .share-icon {
+      color: #4cc9f0;
+    }
+    
+    .feature-title {
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+      color: white;
+    }
+    
+    .feature-description {
+      color: #b3b3b3;
+      margin-bottom: 15px;
+    }
+    
+    .stats-preview {
+      background: rgba(40, 40, 40, 0.8);
+      border-radius: 15px;
+      padding: 40px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      margin: 60px 0;
+      border: 1px solid #333;
+    }
+    
+    .stats-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+    
+    .top-songs, .top-artists {
+      flex: 1;
+      min-width: 300px;
+      background: rgba(30, 30, 30, 0.9);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .stats-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #333;
+    }
+    
+    .stats-header i {
+      font-size: 24px;
+      margin-right: 10px;
+      color: var(--primary);
+    }
+    
+    .stats-list {
+      list-style-type: none;
+    }
+    
+    .stats-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid #333;
+      display: flex;
+      align-items: center;
+    }
+    
+    .stats-list li:last-child {
+      border-bottom: none;
+    }
+    
+    .rank {
+      width: 25px;
+      height: 25px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+    
+    .top-1 {
+      background: gold;
+      color: black;
+    }
+    
+    .top-2 {
+      background: silver;
+      color: black;
+    }
+    
+    .top-3 {
+      background: #cd7f32; /* Bronze */
+      color: black;
+    }
+    
+    .how-it-works {
+      margin: 60px 0;
+    }
+    
+    .steps {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 40px;
+    }
+    
+    .step {
+      flex: 1;
+      min-width: 250px;
+      text-align: center;
+      padding: 30px 20px;
+      background: rgba(40, 40, 40, 0.8);
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      border: 1px solid #333;
+    }
+    
+    .step-number {
+      width: 50px;
+      height: 50px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    
+    .connect-section {
+      text-align: center;
+      background: rgba(40, 40, 40, 0.8);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      margin: 0 auto 60px;
+      border: 1px solid #333;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 30px 0;
+      margin-top: 40px;
+      color: #b3b3b3;
+      border-top: 1px solid #333;
+    }
+    
+    .made-with {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    
+    .note {
+      font-size: 0.9rem;
+      color: #b3b3b3;
+      margin-top: 20px;
+      text-align: center;
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .steps {
+        flex-direction: column;
+      }
+      
+      .stats-preview, .connect-section {
+        padding: 25px;
+      }
+      
+      .stats-container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="https://i.ibb.co/sKbrkyn/Yellow-and-Grey-Pastel-Grunge-Designer-Brand-Logo-20241009-185202-0000.png" alt="Spotify Stats Logo">
+      </div>
+      <h1><span class="spotify-text">Spotify</span> Stats</h1>
+      <p class="tagline">Discover your listening habits. See your top 10 songs and artists, and share your music stats with friends.</p>
+        <a href="https://sammuspotify.vercel.app" class="cta-button">View your stats</a>
+    </header>
+    
+    <section class="features-section">
+      <h2 class="section-title">What You'll Discover</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-music  songs-icon"></i>
+          </div>
+          <h3 class="feature-title">Top 10 Songs</h3>
+          <p class="feature-description">See which tracks you've been playing on repeat. Discover your most-listened songs.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-user-friends  artists-icon"></i>
+          </div>
+          <h3 class="feature-title">Top 10 Artists</h3>
+          <p class="feature-description">Find out which artists dominate your playlists and listening time.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-chart-line  stats-icon"></i>
+          </div>
+          <h3 class="feature-title">Listening Statistics</h3>
+          <p class="feature-description">Dive deep into your listening patterns with detailed stats and insights.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-share-alt  share-icon"></i>
+          </div>
+          <h3 class="feature-title">Share With Friends</h3>
+          <p class="feature-description">Show off your music taste by sharing your stats on social media.</p>
+        </div>
+      </div>
+    </section>
+    
+    
+    
+    <section class="how-it-works">
+      <h2 class="section-title">How It Works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Connect Spotify</h3>
+          <p>Securely connect your Spotify account with one click</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Analyze Your Data</h3>
+          <p>We analyze your listening history and patterns</p>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>View Your Stats</h3>
+          <p>Discover your top songs, artists, and listening habits</p>
+        </div>
+      </div>
+    </section>
+    
+
+    
+    <footer>
+      <p class="made-with">Developed with <i class="fas fa-heart" style="color: #e91e63;"></i> By Samartha GS</p>
+    </footer>
+  </div>
+
+
+</body>
+</html>
