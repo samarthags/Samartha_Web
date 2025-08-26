@@ -463,8 +463,6 @@ body {
             <input type="text" id="github" placeholder="GitHub Username - If have">
             <input type="text" id="josh" placeholder="">
 
-
-
             <button id="createProfileBtn">Create Now</button>
 
             <footer class="main-footer">
@@ -636,9 +634,6 @@ body {
             const github = document.getElementById("github").value;
             const josh = document.getElementById("josh").value;
 
-            // Spotify
-            const spotify = document.getElementById("spotify").value;
-
             // Validation
             if (!name) {
                 showToast("Please enter your name");
@@ -709,7 +704,6 @@ body {
                     telegram,
                     github,
                     josh,
-                    spotify,
                     createdAt: new Date().toISOString(),
                     age: age // Store age for easy filtering
                 });
@@ -771,6 +765,5 @@ body {
   openProfileBtn.addEventListener("click", openProfile);
   createNewBtn.addEventListener("click", resetForm);
 </script>
-    </script>
 </body>
 </html>
