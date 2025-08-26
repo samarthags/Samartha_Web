@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Wrapped | Samarth Gs</title>
+
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="GitHub Wrapped - Your Year in GitHub">
+  <meta name="description" content="Discover your GitHub contributions, repositories, and highlights with GitHub Wrapped, developed by samarthags.in">
+
+  <!-- Author -->
+  <meta name="author" content="samarthags.in">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://samarthags.in/githubwrapped">
+  <meta property="og:title" content="GitHub Wrapped - Your Year in GitHub">
+  <meta property="og:description" content="Discover your GitHub contributions, repositories, and highlights with GitHub Wrapped, developed by samarthags.in.">
+  <meta property="og:image" content="https://i.ibb.co/8ngPrQjm/download.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://samarthags.in/githubwrapped">
+  <meta property="twitter:title" content="GitHub Wrapped - Your Year in GitHub">
+  <meta property="twitter:description" content="Discover your GitHub contributions, repositories, and highlights with GitHub Wrapped, developed by samarthags.in.">
+  <meta property="twitter:image" content="https://i.ibb.co/8ngPrQjm/download.png">
+
+  <!-- Favicon / Icon -->
+  <link rel="icon" type="image/png" href="https://i.ibb.co/8ngPrQjm/download.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --primary: #238636;
+      --primary-light: #2ea043;
+      --secondary: #58a6ff;
+      --light-bg: #ffffff;
+      --light-card: #f6f8fa;
+      --text-primary: #24292f;
+      --text-secondary: #57606a;
+      --border: #d0d7de;
+      --accent: #8250df;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--light-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    
+    /* Header Styles */
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .animated-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.1;
+    }
+    
+    .animated-bg::before {
+      content: "";
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(var(--primary), transparent 70%);
+      top: -150px;
+      left: -150px;
+      border-radius: 50%;
+      animation: float 15s infinite ease-in-out;
+    }
+    
+    .animated-bg::after {
+      content: "";
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(var(--secondary), transparent 70%);
+      bottom: -100px;
+      right: -100px;
+      border-radius: 50%;
+      animation: float 12s infinite ease-in-out reverse;
+    }
+    
+    .logo {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 1.5rem;
+      border-radius: 50%;
+      background: linear-gradient(145deg, var(--primary) 0%, var(--primary-light) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(35, 134, 54, 0.15);
+      animation: pulse 2s infinite ease-in-out;
+    }
+    
+    .logo svg {
+      width: 50px;
+      height: 50px;
+      fill: white;
+    }
+    
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(to right, var(--accent) 0%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: slideIn 1s ease-out;
+    }
+    
+    .tagline {
+      font-size: 1.3rem;
+      font-weight: 300;
+      margin-bottom: 2rem;
+      color: var(--text-secondary);
+      animation: slideIn 1s ease-out 0.2s both;
+    }
+    
+    /* Intro Section */
+    .intro {
+      max-width: 800px;
+      margin: 0 auto 3rem;
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      animation: slideIn 1s ease-out 0.4s both;
+    }
+    
+    /* Lines of Code Counter */
+    .lines-counter {
+      background: linear-gradient(to right, var(--light-card), #f0f7ff);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 2rem auto 3rem;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border);
+      max-width: 800px;
+      animation: fadeIn 1s ease-out 0.6s both;
+    }
+    
+    .counter-title {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .counter-icon {
+      font-size: 2rem;
+    }
+    
+    .counter-value {
+      font-size: 3.5rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--accent), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 1rem 0;
+    }
+    
+    .counter-description {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Features Grid */
+    .features {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+    
+    .feature-card {
+      background: var(--light-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeIn 0.8s ease-out;
+    }
+    
+    .feature-card:nth-child(1) { animation-delay: 0.2s; }
+    .feature-card:nth-child(2) { animation-delay: 0.4s; }
+    .feature-card:nth-child(3) { animation-delay: 0.6s; }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+      border-color: var(--primary);
+    }
+    
+    .feature-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    
+    .feature-title {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+    
+    .feature-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+      text-align: center;
+      padding: 2rem 1rem;
+      margin: 2rem 0;
+      animation: fadeIn 1s ease-out 0.8s both;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(to right, var(--accent), var(--primary));
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 1.2rem 2.5rem;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 10px 30px rgba(88, 166, 255, 0.25);
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.5px;
+    }
+    
+    .cta-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: 0.5s;
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 15px 35px rgba(88, 166, 255, 0.35);
+    }
+    
+    .cta-button:hover::before {
+      left: 100%;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+      background: var(--light-card);
+    }
+    
+    .footer-text {
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .heart {
+      color: #f85149;
+      display: inline-block;
+      animation: heartbeat 1.5s infinite;
+    }
+    
+    /* Animations */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    
+    @keyframes float {
+      0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      33% {
+        transform: translate(30px, -20px) rotate(5deg);
+      }
+      66% {
+        transform: translate(-20px, 20px) rotate(-5deg);
+      }
+    }
+    
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      5% { transform: scale(1.2); }
+      10% { transform: scale(1.1); }
+      15% { transform: scale(1.3); }
+      50% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+    
+    /* Media Queries for Larger Screens */
+    @media (min-width: 768px) {
+      .container {
+        padding: 2rem;
+      }
+      
+      header {
+        padding: 3rem 1rem;
+      }
+      
+      .logo {
+        width: 120px;
+        height: 120px;
+      }
+      
+      .logo svg {
+        width: 60px;
+        height: 60px;
+      }
+      
+      h1 {
+        font-size: 3.5rem;
+      }
+      
+      .tagline {
+        font-size: 1.5rem;
+      }
+      
+      .intro {
+        font-size: 1.2rem;
+      }
+      
+      .counter-value {
+        font-size: 4.5rem;
+      }
+      
+      .features {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+      }
+      
+      .feature-card {
+        padding: 2rem;
+      }
+      
+      .cta-button {
+        font-size: 1.2rem;
+        padding: 1.2rem 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="animated-bg"></div>
+      <div class="logo">
+        <svg viewBox="0 0 16 16" version="1.1" aria-hidden="true">
+          <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+      </div>
+      <h1>GitHub Wrapped</h1>
+      <p class="tagline">Your Year in Code - Visualized</p>
+    </header>
+    
+    <section>
+      <p class="intro">
+        GitHub Wrapped is your personalized summary of your coding journey over the past year. 
+        Discover your contributions, top languages, most active repositories, and coding habits 
+        in a beautifully presented format - just like your favorite music wrapped, but for developers!
+      </p>
+    </section>
+    
+    <!-- Lines of Code Counter Section -->
+    <div class="lines-counter">
+      <h2 class="counter-title"><span class="counter-icon">📈</span> Total Lines of Code</h2>
+      <div class="counter-value">427,819</div>
+      <p class="counter-description">
+        That's how many lines of code you've contributed to GitHub this year! 
+        Your coding journey spans across multiple projects and languages, 
+        showcasing your dedication to development.
+      </p>
+    </div>
+    
+    <section class="features">
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3 class="feature-title">Contribution Insights</h3>
+        <p class="feature-desc">See your commit history, pull requests, and issues in a visually engaging timeline.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3 class="feature-title">Language Breakdown</h3>
+        <p class="feature-desc">Discover which programming languages you used most throughout the year.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">⭐</div>
+        <h3 class="feature-title">Repository Highlights</h3>
+        <p class="feature-desc">Find out which of your repositories got the most attention and engagement.</p>
+      </div>
+    </section>
+    
+    <section class="cta-section">
+      <a href="https://sammugithub.vercel.app" class="cta-button">See Your GitHub Wrapped</a>
+    </section>
+  </div>
+  
+  <footer>
+    <p class="footer-text">Made with <span class="heart">💜</span> by Samarth Gs</p>
+  </footer>
+</body>
+</html>
