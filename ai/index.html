@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-
+<!-- Coding By CodingNepal - youtube.com/@codingnepal -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -13,11 +13,29 @@
     <div class="container">
       <!-- App Header -->
       <header class="app-header">
-        <h1 class="heading">Hello, I'm Sam</h1>
+        <h1 class="heading">Hello, there</h1>
         <h4 class="sub-heading">How can I help you today?</h4>
       </header>
 
-     
+      <!-- Suggestions List -->
+      <ul class="suggestions">
+        <li class="suggestions-item">
+          <p class="text">Design a home office setup for remote work under $500.</p>
+          <span class="icon material-symbols-rounded">draw</span>
+        </li>
+        <li class="suggestions-item">
+          <p class="text">How can I level up my web development expertise in 2025?</p>
+          <span class="icon material-symbols-rounded">lightbulb</span>
+        </li>
+        <li class="suggestions-item">
+          <p class="text">Suggest some useful tools for debugging JavaScript code.</p>
+          <span class="icon material-symbols-rounded">explore</span>
+        </li>
+        <li class="suggestions-item">
+          <p class="text">Create a React JS component for the simple todo list app.</p>
+          <span class="icon material-symbols-rounded">code_blocks</span>
+        </li>
+      </ul>
 
       <!-- Chats -->
       <div class="chats-container"></div>
@@ -26,12 +44,12 @@
       <div class="prompt-container">
         <div class="prompt-wrapper">
           <form action="#" class="prompt-form">
-            <input type="text" placeholder="Ask Sam" class="prompt-input" required />
+            <input type="text" placeholder="Ask Gemini" class="prompt-input" required />
             <div class="prompt-actions">
               <!-- File Upload Wrapper -->
               <div class="file-upload-wrapper">
                 <img src="#" class="file-preview" />
-                <input id="file-input" type="file" accept="image/*" hidden />
+                <input id="file-input" type="file" accept="image/*, .pdf, .txt, .csv" hidden />
                 <button type="button" class="file-icon material-symbols-rounded">description</button>
                 <button id="cancel-file-btn" type="button" class="material-symbols-rounded">close</button>
                 <button id="add-file-btn" type="button" class="material-symbols-rounded">attach_file</button>
@@ -43,9 +61,12 @@
             </div>
           </form>
 
-        
+          <!-- Theme and Delete Chats Buttons -->
+          <button id="theme-toggle-btn" class="material-symbols-rounded">light_mode</button>
+          <button id="delete-chats-btn" class="material-symbols-rounded">delete</button>
+        </div>
 
-        <p class="disclaimer-text">Developed by Samartha Gs from API</p>
+        <p class="disclaimer-text">Gemini can make mistakes, so double-check it.</p>
       </div>
     </div>
 
