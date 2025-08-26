@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic SEO -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Your Profile</title>
+  <meta name="description" content="Developed by Samartha GS. Create and share your personalized profile page at samarthags.in/createyourprofile. Showcase your bio, projects, and social links in one place.">
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://i.ibb.co/sKbrkyn/Yellow-and-Grey-Pastel-Grunge-Designer-Brand-Logo-20241009-185202-0000.png" type="image/png">
+
+  <!-- Open Graph (Social Sharing) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://samarthags.in/createyourprofile">
+  <meta property="og:title" content="Create Your Profile">
+  <meta property="og:description" content="Developed by Samartha GS. Build your profile page and share it with the world. Add bio, projects, and social links.">
+  <meta property="og:image" content="https://i.ibb.co/sKbrkyn/Yellow-and-Grey-Pastel-Grunge-Designer-Brand-Logo-20241009-185202-0000.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content=" Create Your Profile">
+  <meta name="twitter:description" content="Developed by Samartha GS. Build your profile page and share it with the world.">
+  <meta name="twitter:image" content="https://i.ibb.co/sKbrkyn/Yellow-and-Grey-Pastel-Grunge-Designer-Brand-Logo-20241009-185202-0000.png">
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Structured Data (Sitelinks Search Box + Organization) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Samartha GS",
+    "url": "https://samarthags.in/createyourprofile",
+    "logo": "https://i.ibb.co/sKbrkyn/Yellow-and-Grey-Pastel-Grunge-Designer-Brand-Logo-20241009-185202-0000.png",
+    "sameAs": [
+      "https://www.linkedin.com/in/samarthags/",
+      "https://github.com/samarthags"
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "url": "https://samarthags.in/createyourprofile",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://samarthags.in/createyourprofile/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+body {
+            font-family: 'Poppins', sans-serif;
+            background:white
+
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .create-container {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.6s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+        .container-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h2 {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 14px;
+            font-weight: 400;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        .input-group label {
+            position: absolute;
+            left: 15px;
+            top: 17px;
+            color: #95a5a6;
+            pointer-events: none;
+            transition: 0.3s ease all;
+            font-size: 16px;
+        }
+        .input-group input:focus ~ label,
+        .input-group input:not(:placeholder-shown) ~ label,
+        .input-group textarea:focus ~ label,
+        .input-group textarea:not(:placeholder-shown) ~ label {
+            top: -12px;
+            left: 12px;
+            font-size: 12px;
+            background: white;
+            padding: 0 5px;
+            color: #4a90e2;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+            font-family: 'Poppins', sans-serif;
+        }
+        input::placeholder, textarea::placeholder {
+            color: transparent;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .file-input-container {
+            position: relative;
+            width: 100%;
+            height: 120px;
+            border: 2px dashed #e0e0e0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+            background: #f9f9f9;
+        }
+        .file-input-container:hover {
+            border-color: #4a90e2;
+            background: #f0f8ff;
+        }
+        .file-input-container i {
+            font-size: 30px;
+            color: #95a5a6;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        .file-input-container:hover i {
+            color: #4a90e2;
+        }
+        .file-input-container span {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .file-input-container input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .preview-container {
+            display: none;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 10px;
+            border: 3px solid #4a90e2;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .preview-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #createProfileBtn {
+            width: 100%;
+            padding: 16px;
+            background: #007bff;
+            color:white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(230, 74, 25, 0.4);
+        }
+        #createProfileBtn:hover {
+            background:;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(230, 74, 25, 0.5);
+        }
+        #createProfileBtn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(230, 74, 25, 0.4);
+        }
+        /* Background elements */
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 0;
+        }
+        .bg-circle-1 {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -50px;
+        }
+        .bg-circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            right: 50px;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-content {
+            background: white;
+            padding: 35px 30px;
+            border-radius: 20px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            animation: scaleIn 0.4s forwards;
+            position: relative;
+        }
+        .modal-title {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .modal button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: #4a90e2;
+            color: white;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+        .btn-primary:hover {
+            background: #357abd;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #f5f7fa;
+            color: #7f8c8d;
+            border: 1px solid #e0e0e0;
+        }
+        .btn-secondary:hover {
+            background: #ecf0f1;
+        }
+        #loadingModal .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4a90e2;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        .success-icon {
+            font-size: 60px;
+            color: #2ecc71;
+            margin: 10px 0 20px;
+        }
+        .profile-url-container {
+            background: #f5f7fa;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #e0e0e0;
+        }
+        .profile-url-container p {
+            margin: 0;
+            font-weight: 500;
+            color: #2c3e50;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 80%;
+        }
+        /* Footer */
+        .modal-footer {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #95a5a6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-footer i {
+            color: #e74c3c;
+            margin: 0 3px;
+        }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e50;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+            z-index: 1001;
+            display: none;
+            animation: fadeInUp 0.3s, fadeOut 0.3s 2.7s forwards;
+        }
+        @keyframes fadeInUp {
+            from { transform: translate(-50%, 20px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+.input-group input,
+.input-group textarea {
+    font-family: inherit;
+    font-size: 16px;
+    color: #333;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    background: transparent;
+    transition: 0.3s;
+    margin-bottom: 12px; /* Added gap */
+}
+
+/* Placeholder visibility */
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+    color: #888;
+    opacity: 1;
+    font-size: 14px;
+}
+
+/* Spacing and visibility for Spotify */
+#spotify {
+    margin-top: 10px;
+}
+
+#spotify::placeholder {
+    color: #555;
+    font-size: 14px;
+}
+.main-footer {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    margin-top: 30px;
+    padding: 15px 0;
+    background: #f9f9f9;
+    position: relative;
+    width: 100%;
+}
+.main-footer i {
+    color: red;
+}
+.main-footer a {
+    text-decoration: none;
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+.main-footer a:hover {
+    color: black; /* Changes color on hover */
+}
+.footer-note {
+    font-size: 8px;
+    color: #888;
+    margin-top: 5px;
+}
+    </style>
+</head>
+<body>
+    <!-- Background circles -->
+    <div class="bg-circle bg-circle-1"></div>
+    <div class="bg-circle bg-circle-2"></div>
+
+    <div class="create-container">
+        <div class="container-header">
+            <h2>Your Profile</h2>
+<p class="subtitle">Be one in Google & ChatGPT</p>
+            <p class="subtitle">Share your profile card with the world</p>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="name" placeholder=" " required>
+            <label for="name">Name</label>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="location" placeholder=" " required>
+            <label for="location">Your Location (City, Country)</label>
+        </div>
+
+        <div class="input-group">
+            <input type="date" id="birthday" placeholder=" " required>
+            <label for="birthday">Your Birthday</label>
+        </div>
+
+        <div class="preview-container" id="imagePreview">
+            <img id="previewImg" src="" alt="Preview">
+        </div>
+
+        <div class="file-input-container" id="fileInputContainer">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span>Upload profile picture</span>
+            <p id="fileName" style="margin-top:5px; font-size:12px;"></p>
+            <input type="file" id="profileImage" accept="image/*" required>
+        </div>
+
+        <div class="input-group">
+            <textarea id="bio" placeholder=" " required></textarea>
+            <label for="bio">Tell me about yourself Or your hobbies</label>
+        </div>
+
+        <div class="input-group">
+            <h3>Social Profiles (Optional)</h3>
+            <input type="text" id="instagram" placeholder="Instagram ID - If have">
+            <input type="text" id="snapchat" placeholder="Snapchat ID - If have">
+            <input type="text" id="whatsapp" placeholder="WhatsApp Number - If have">
+            <input type="text" id="facebook" placeholder="Facebook Username - If have">
+            <input type="text" id="twitter" placeholder="Twitter Username - If have">
+            <input type="text" id="linkedin" placeholder="LinkedIn Username - If have">
+            <input type="text" id="youtube" placeholder="YouTube ID - If have">
+            <input type="email" id="email" placeholder="Email Address">
+            <input type="text" id="telegram" placeholder="Telegram Username - If have">
+            <input type="text" id="github" placeholder="GitHub Username - If have">
+            <input type="text" id="josh" placeholder="">
+
+            <button id="createProfileBtn">Create Now</button>
+
+            <footer class="main-footer">
+                Made with 🖤 By 
+                <b><a href="https://samarthags.in" target="_blank">Samartha GS</a></b>
+                <p class="footer-note">Click on <b>Samartha GS</b></p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toastNotification"></div>
+
+    <!-- Loading Modal -->
+    <div class="modal" id="loadingModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Samarth Is Creating Your Website</h3>
+            <div class="loader"></div>
+            <p>Please wait! while creating your web...</p>
+            <div class="modal-footer">
+                <span>Made with <i class="fas fa-heart"></i> By Samartha Gs</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h3 class="modal-title">Website Created 🥳</h3>
+            <p>Your Web is now live and ready to share 🎉</p>
+
+            <div class="profile-url-container">
+                <p id="profileUrl"></p>
+                <i class="fas fa-copy" id="copyIcon" style="cursor:pointer; color:#4a90e2;"></i>
+            </div>
+
+            <button class="btn-primary" id="openProfileBtn">View Your Website</button>
+
+            <div class="modal-footer">
+                <span>Made with <i class="fas fa-heart"></i> By Samartha GS</span>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBb3x_zD9JaFwL9PhmngCNZlS2fOh6MBa4",
+            authDomain: "newai-52371.firebaseapp.com",
+            projectId: "newai-52371",
+            storageBucket: "newai-52371.appspot.com",
+            messagingSenderId: "480586908639",
+            appId: "1:480586908639:web:f4645a852c4df724c6fa6a"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // DOM elements
+        const nameInput = document.getElementById("name");
+        const locationInput = document.getElementById("location");
+        const birthdayInput = document.getElementById("birthday");
+        const bioInput = document.getElementById("bio");
+        const profileImageInput = document.getElementById("profileImage");
+        const createProfileBtn = document.getElementById("createProfileBtn");
+        const loadingModal = document.getElementById("loadingModal");
+        const successModal = document.getElementById("successModal");
+        const profileUrlElement = document.getElementById("profileUrl");
+        const copyIcon = document.getElementById("copyIcon");
+        const openProfileBtn = document.getElementById("openProfileBtn");
+        const createNewBtn = document.getElementById("createNewBtn");
+        const toastNotification = document.getElementById("toastNotification");
+        const imagePreview = document.getElementById("imagePreview");
+        const previewImg = document.getElementById("previewImg");
+        const fileInputContainer = document.getElementById("fileInputContainer");
+        const fileName = document.getElementById("fileName");
+
+        // Handle image preview
+        profileImageInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    previewImg.src = event.target.result;
+                    imagePreview.style.display = "block";
+                    fileInputContainer.style.borderStyle = "solid";
+                    fileName.textContent = file.name;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Upload image to Cloudinary
+        async function uploadImage(file) {
+            const cloudName = "dw1qrki2c";
+            const uploadPreset = "profile_uploads";
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", uploadPreset);
+
+            try {
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Image upload failed');
+                }
+
+                const data = await response.json();
+                return data.secure_url;
+            } catch (error) {
+                console.error("Error uploading image:", error);
+                showToast("Image upload failed. Please try again.");
+                throw error;
+            }
+        }
+
+        // Generate unique username
+        async function generateUniqueUsername(name) {
+            let username = name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+            if (username.length < 3) username += Math.floor(Math.random() * 1000);
+
+            let count = 1;
+            let finalUsername = username;
+
+            try {
+                const q = query(collection(db, "profiles"), where("username", "==", finalUsername));
+                let querySnapshot = await getDocs(q);
+
+                while (!querySnapshot.empty) {
+                    finalUsername = username + count;
+                    count++;
+                    querySnapshot = await getDocs(query(collection(db, "profiles"), where("username", "==", finalUsername)));
+                }
+
+                return finalUsername;
+            } catch (error) {
+                console.error("Error generating username:", error);
+                return username + Math.floor(Math.random() * 10000);
+            }
+        }
+
+        // Create profile
+        async function createProfile() {
+            const name = nameInput.value.trim();
+            const location = locationInput.value.trim();
+            const birthday = birthdayInput.value;
+            const imageFile = profileImageInput.files[0];
+            const bio = bioInput.value.trim();
+
+            // Get Social Profiles individually
+            const instagram = document.getElementById("instagram").value;
+            const snapchat = document.getElementById("snapchat").value;
+            const whatsapp = document.getElementById("whatsapp").value;
+            const facebook = document.getElementById("facebook").value;
+            const twitter = document.getElementById("twitter").value;
+            const linkedin = document.getElementById("linkedin").value;
+            const youtube = document.getElementById("youtube").value;
+            const email = document.getElementById("email").value;
+            const telegram = document.getElementById("telegram").value;
+            const github = document.getElementById("github").value;
+            const josh = document.getElementById("josh").value;
+
+            // Validation
+            if (!name) {
+                showToast("Please enter your name");
+                nameInput.focus();
+                return;
+            }
+
+            if (!location) {
+                showToast("Please enter your location");
+                locationInput.focus();
+                return;
+            }
+
+            if (!birthday) {
+                showToast("Please select your birthday");
+                birthdayInput.focus();
+                return;
+            }
+
+            // Validate age (at least 13 years old)
+            const birthDate = new Date(birthday);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+
+            if (age < 13) {
+                showToast("You must be at least 13 years old to create a profile");
+                return;
+            }
+
+            if (!imageFile) {
+                showToast("Please upload a profile picture");
+                return;
+            }
+
+            if (!bio) {
+                showToast("Please write a short bio");
+                bioInput.focus();
+                return;
+            }
+
+            loadingModal.style.display = "flex";
+
+            try {
+                let username = await generateUniqueUsername(name);
+                let imageUrl = await uploadImage(imageFile);
+
+                // Add to Firestore
+                await addDoc(collection(db, "profiles"), {
+                    name,
+                    username,
+                    location,
+                    birthday,
+                    imageUrl,
+                    bio,
+                    instagram,
+                    snapchat,
+                    whatsapp,
+                    facebook,
+                    twitter,
+                    linkedin,
+                    youtube,
+                    email,
+                    telegram,
+                    github,
+                    josh,
+                    createdAt: new Date().toISOString(),
+                    age: age // Store age for easy filtering
+                });
+
+          // Show success
+          loadingModal.style.display = "none";
+          profileUrlElement.innerText = `mywebsam.site/${username}`;
+          successModal.style.display = "flex";
+      } catch (error) {
+          loadingModal.style.display = "none";
+          console.error("Error creating web:", error);
+          showToast("Something went wrong. Please try again.");
+      }
+  }
+
+  // Copy profile link
+  function copyProfileLink() {
+      const profileUrl = profileUrlElement.innerText;
+      navigator.clipboard.writeText(profileUrl)
+          .then(() => {
+              showToast("Website link copied to clipboard!");
+          })
+          .catch(err => {
+              console.error('Could not copy text: ', err);
+              showToast("Failed to copy link");
+          });
+  }
+
+  // Open profile
+  function openProfile() {
+      const profileUrl = profileUrlElement.innerText;
+      window.open(`https://${profileUrl}`, "_blank");
+  }
+
+  // Reset form for new profile
+  function resetForm() {
+      successModal.style.display = "none";
+      nameInput.value = "";
+      bioInput.value = "";
+      profileImageInput.value = "";
+      imagePreview.style.display = "none";
+      fileName.textContent = "";
+      fileInputContainer.style.borderStyle = "dashed";
+  }
+
+  // Show toast notification
+  function showToast(message) {
+      toastNotification.textContent = message;
+      toastNotification.style.display = "block";
+
+      setTimeout(() => {
+          toastNotification.style.display = "none";
+      }, 3000);
+  }
+
+  // Event listeners
+  createProfileBtn.addEventListener("click", createProfile);
+  copyIcon.addEventListener("click", copyProfileLink);
+  openProfileBtn.addEventListener("click", openProfile);
+  createNewBtn.addEventListener("click", resetForm);
+</script>
+</body>
+</html>
