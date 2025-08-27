@@ -4,11 +4,10 @@ const promptForm = document.querySelector(".prompt-form");
 const promptInput = promptForm.querySelector(".prompt-input");
 const fileInput = promptForm.querySelector("#file-input");
 const fileUploadWrapper = promptForm.querySelector(".file-upload-wrapper");
-const themeToggleBtn = document.querySelector("#theme-toggle-btn");
 
-// =======================
-// 🔑 API Keys Rotation
-// =======================
+let controller, typingInterval;
+
+// === API KEYS SETUP ===
 const API_KEYS = [
   "AIzaSyBwtb3i2Avw3NL5vS4oNqB3im98AqB4h8s",
   "AIzaSyAo6vdXNaiUEr4ebry6nBYAjPkxF5HiC18",
@@ -20,17 +19,25 @@ const API_KEYS = [
   "AIzaSyBtOP_l0VsTAxRV_tPJvnc7rUBEdKNDJ_g",
   "43fb96a4edda40e4a646eddf1621955f"
 ];
-const getRandomKey = () => API_KEYS[Math.floor(Math.random() * API_KEYS.length)];
-const getApiUrl = () =>
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getRandomKey()}`;
 
-let controller, typingInterval;
+// Pick random key
+const getRandomApiKey = () => {
+  const index = Math.floor(Math.random() * API_KEYS.length);
+  return API_KEYS[index];
+};
+
+// Build API URL
+const getApiUrl = () => {
+  return `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getRandomApiKey()}`;
+};
+
+// === CHAT HISTORY INITIALIZATION ===
 const chatHistory = [
   {
     role: "model",
     parts: [
       {
-        text: `You are **Sam AI**, a smart AI assistant created and developed by **Samartha GS** using GS Model with Google's Gemini API.  
+        text: `You are **Sam AI**, a smart AI assistant created and developed by **Samartha GS** using SGS Model with  API.  
 
 Identity:  
 - Name: Sam AI  
@@ -42,7 +49,7 @@ About Samartha GS:
 Samartha GS is a developer and innovator from India. He builds AI, web technologies, and digital tools with focus on simplicity and usability.  
 
 When asked "Who are you?", always reply:  
-"I am Sam AI, created by Samartha GS using GS Model with Gemini API. Learn more at samarthags.in."`
+"I am Sam AI, created by Samartha GS using SGS Model with  API. Learn more at samarthags.in."`
       }
     ]
   }
@@ -50,16 +57,9 @@ When asked "Who are you?", always reply:
 
 const userData = { message: "", file: {} };
 
-// =======================
-// 🎨 Theme Setup
-// =======================
-const isLightTheme = localStorage.getItem("themeColor") === "light_mode";
-document.body.classList.toggle("light-theme", isLightTheme);
-themeToggleBtn.textContent = isLightTheme ? "dark_mode" : "light_mode";
+// === HELPERS ===
 
-// =======================
-// 📌 Helper Functions
-// =======================
+// Create message element
 const createMessageElement = (content, ...classes) => {
   const div = document.createElement("div");
   div.classList.add("message", ...classes);
@@ -67,9 +67,11 @@ const createMessageElement = (content, ...classes) => {
   return div;
 };
 
+// Scroll to bottom
 const scrollToBottom = () =>
   container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
 
+// Typing effect
 const typingEffect = (text, textElement, botMsgDiv) => {
   textElement.textContent = "";
   const words = text.split(" ");
@@ -88,25 +90,18 @@ const typingEffect = (text, textElement, botMsgDiv) => {
   }, 40);
 };
 
-// =======================
-// 🤖 Generate Response
-// =======================
+// === API CALL ===
 const generateResponse = async (botMsgDiv) => {
   const textElement = botMsgDiv.querySelector(".message-text");
   controller = new AbortController();
 
+  // Push user message
   chatHistory.push({
     role: "user",
     parts: [
       { text: userData.message },
       ...(userData.file.data
-        ? [
-            {
-              inline_data: (({ fileName, isImage, ...rest }) => rest)(
-                userData.file
-              )
-            }
-          ]
+        ? [{ inline_data: { mime_type: userData.file.mime_type, data: userData.file.data } }]
         : [])
     ]
   });
@@ -122,35 +117,34 @@ const generateResponse = async (botMsgDiv) => {
     const data = await response.json();
     if (!response.ok) throw new Error(data.error.message);
 
-    const responseText = data.candidates[0].content.parts[0].text
-      .replace(/\*\*([^*]+)\*\*/g, "$1")
-      .trim();
-
-    typingEffect(responseText, textElement, botMsgDiv);
-
-    chatHistory.push({ role: "model", parts: [{ text: responseText }] });
+    const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (responseText) {
+      const cleanText = responseText.replace(/\*\*([^*]+)\*\*/g, "$1").trim();
+      typingEffect(cleanText, textElement, botMsgDiv);
+      chatHistory.push({ role: "model", parts: [{ text: cleanText }] });
+    } else {
+      textElement.textContent = "No valid response received.";
+      textElement.style.color = "#d62939";
+      botMsgDiv.classList.remove("loading");
+      document.body.classList.remove("bot-responding");
+    }
   } catch (error) {
     textElement.textContent =
-      error.name === "AbortError"
-        ? "Response generation stopped."
-        : error.message;
+      error.name === "AbortError" ? "Response stopped." : error.message;
     textElement.style.color = "#d62939";
     botMsgDiv.classList.remove("loading");
     document.body.classList.remove("bot-responding");
-    scrollToBottom();
   } finally {
     userData.file = {};
+    scrollToBottom();
   }
 };
 
-// =======================
-// 📤 Handle User Message
-// =======================
+// === FORM HANDLING ===
 const handleFormSubmit = (e) => {
   e.preventDefault();
   const userMessage = promptInput.value.trim();
-  if (!userMessage || document.body.classList.contains("bot-responding"))
-    return;
+  if (!userMessage || document.body.classList.contains("bot-responding")) return;
 
   userData.message = userMessage;
   promptInput.value = "";
@@ -174,7 +168,7 @@ const handleFormSubmit = (e) => {
   scrollToBottom();
 
   setTimeout(() => {
-    const botMsgHTML = `<img class="avatar" src="gemini.svg" /> <p class="message-text">Just a sec...</p>`;
+    const botMsgHTML = `<p class="message-text">Sam AI is typing...</p>`;
     const botMsgDiv = createMessageElement(
       botMsgHTML,
       "bot-message",
@@ -183,12 +177,10 @@ const handleFormSubmit = (e) => {
     chatsContainer.appendChild(botMsgDiv);
     scrollToBottom();
     generateResponse(botMsgDiv);
-  }, 600);
+  }, 500);
 };
 
-// =======================
-// 📂 File Upload
-// =======================
+// === FILE UPLOAD ===
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
   if (!file) return;
@@ -205,7 +197,6 @@ fileInput.addEventListener("change", () => {
       "active",
       isImage ? "img-attached" : "file-attached"
     );
-
     userData.file = {
       fileName: file.name,
       data: base64String,
@@ -215,71 +206,24 @@ fileInput.addEventListener("change", () => {
   };
 });
 
-document
-  .querySelector("#cancel-file-btn")
-  .addEventListener("click", () => {
-    userData.file = {};
-    fileUploadWrapper.classList.remove(
-      "file-attached",
-      "img-attached",
-      "active"
-    );
-  });
+// Cancel file upload
+document.querySelector("#cancel-file-btn").addEventListener("click", () => {
+  userData.file = {};
+  fileUploadWrapper.classList.remove("file-attached", "img-attached", "active");
+});
 
-// =======================
-// ⏹ Stop Response
-// =======================
+// Stop Bot Response
 document.querySelector("#stop-response-btn").addEventListener("click", () => {
   controller?.abort();
   userData.file = {};
   clearInterval(typingInterval);
-  chatsContainer
-    .querySelector(".bot-message.loading")
-    ?.classList.remove("loading");
+  const loadingBot = chatsContainer.querySelector(".bot-message.loading");
+  if (loadingBot) loadingBot.classList.remove("loading");
   document.body.classList.remove("bot-responding");
 });
 
-// =======================
-// 🎨 Theme Toggle
-// =======================
-themeToggleBtn.addEventListener("click", () => {
-  const isLightTheme = document.body.classList.toggle("light-theme");
-  localStorage.setItem("themeColor", isLightTheme ? "light_mode" : "dark_mode");
-  themeToggleBtn.textContent = isLightTheme ? "dark_mode" : "light_mode";
-});
-
-// =======================
-// 🗑 Delete Chats
-// =======================
-document.querySelector("#delete-chats-btn").addEventListener("click", () => {
-  chatHistory.length = 0;
-  chatsContainer.innerHTML = "";
-  document.body.classList.remove("chats-active", "bot-responding");
-});
-
-// =======================
-// 💡 Suggestions
-// =======================
-document.querySelectorAll(".suggestions-item").forEach((suggestion) => {
-  suggestion.addEventListener("click", () => {
-    promptInput.value = suggestion.querySelector(".text").textContent;
-    promptForm.dispatchEvent(new Event("submit"));
-  });
-});
-
-// =======================
-// 📱 Mobile Controls
-// =======================
-document.addEventListener("click", ({ target }) => {
-  const wrapper = document.querySelector(".prompt-wrapper");
-  const shouldHide =
-    target.classList.contains("prompt-input") ||
-    (wrapper.classList.contains("hide-controls") &&
-      (target.id === "add-file-btn" || target.id === "stop-response-btn"));
-  wrapper.classList.toggle("hide-controls", shouldHide);
-});
-
+// === SUBMIT FORM ===
 promptForm.addEventListener("submit", handleFormSubmit);
-promptForm
-  .querySelector("#add-file-btn")
-  .addEventListener("click", () => fileInput.click());
+promptForm.querySelector("#add-file-btn").addEventListener("click", () =>
+  fileInput.click()
+);
