@@ -168,7 +168,7 @@ const handleFormSubmit = (e) => {
   scrollToBottom();
 
   setTimeout(() => {
-    const botMsgHTML = `<p class="message-text">Sam AI is typing...</p>`;
+    const botMsgHTML = `<p class="message-text">Samrth is typing...</p>`;
     const botMsgDiv = createMessageElement(
       botMsgHTML,
       "bot-message",
