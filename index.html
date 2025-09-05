@@ -505,41 +505,43 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
     const analytics = getAnalytics(app);    
     const auth = getAuth(app);    
 
-    let currentUid = null;    
-
-    const likeButton = document.getElementById("likeButton");    
-    likeButton.disabled = true; // disable until ready    
-
-    // Anonymous login immediately    
+    // Ensure user has an anonymous account    
     signInAnonymously(auth).catch((error) => {    
         console.error("Anonymous sign-in error:", error);    
     });    
 
-    // When user is ready, enable button    
+    let currentUid = null;    
+
     onAuthStateChanged(auth, (user) => {    
         if (user) {    
             currentUid = user.uid;    
-            console.log("Anon UID:", currentUid);    
-            likeButton.disabled = false;    
+            console.log("Signed in anonymously as:", currentUid);    
         }    
     });    
 
     // Reference to likes node    
     const likesRef = ref(db, "likes");    
 
-    // Realtime like count    
+    // Realtime like count listener    
     onValue(likesRef, (snapshot) => {    
         const data = snapshot.val() || {};    
         const count = Object.keys(data).length;    
         document.getElementById("likeCount").innerText = count;    
     });    
 
-    // Like button action    
+    // Like button click    
     window.likePost = function () {    
-        if (!currentUid) return;  // should never happen now    
+        const likeButton = document.getElementById("likeButton");    
+        const likeCountSpan = document.getElementById("likeCount");    
+
+        if (!currentUid) {    
+            alert("Error: User not signed in yet. Please try again.");    
+            return;    
+        }    
 
         const userLikeRef = ref(db, "likes/" + currentUid);    
 
+        // Check if already liked    
         get(userLikeRef).then((snapshot) => {    
             if (snapshot.exists()) {    
                 // Already liked    
@@ -547,18 +549,21 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
                 setTimeout(() => likeButton.classList.remove("shake"), 500);    
                 alert("Oops! You've already liked ❤️‍🔥 Thanks for your support! 🙌😊");    
             } else {    
+                // Store like in database    
                 set(userLikeRef, true).then(() => {    
-                    // Floating heart    
+                    // Floating heart animation    
                     const heart = document.createElement("div");    
                     heart.classList.add("floating-heart");    
                     heart.innerHTML = "+1 ❤️‍🔥";    
+
                     const rect = likeButton.getBoundingClientRect();    
                     heart.style.left = `${rect.left + rect.width / 2}px`;    
                     heart.style.top = `${rect.top - 10}px`;    
+
                     document.body.appendChild(heart);    
                     setTimeout(() => heart.remove(), 1500);    
 
-                    // Ripple    
+                    // Ripple effect    
                     showRippleEffect(likeButton);    
                 });    
             }    
@@ -569,14 +574,15 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
     function showRippleEffect(button) {    
         const ripple = document.createElement("span");    
         ripple.classList.add("ripple");    
+
         const rect = button.getBoundingClientRect();    
         ripple.style.left = `${rect.width / 2}px`;    
         ripple.style.top = `${rect.height / 2}px`;    
+
         button.appendChild(ripple);    
         setTimeout(() => ripple.remove(), 600);    
     }    
 </script>
-
 
 
 
