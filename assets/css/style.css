@@ -1168,4 +1168,28 @@ transition: transform 0.3s ease, color 0.3s ease;
 
 
 
-  
+  .iconButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(45deg, var(--first-color), var(--first-color-alt));
+    color: white;
+    cursor: pointer;
+    width: 80px;   /* smaller than like button */
+    height: 80px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.iconButton:hover {
+    box-shadow: 0 0 40px var(--first-color);
+}
+
+.icon_only {
+    font-size: 35px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
