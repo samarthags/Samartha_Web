@@ -505,65 +505,60 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
     const analytics = getAnalytics(app);    
     const auth = getAuth(app);    
 
-    // Ensure user has an anonymous account    
+    let currentUid = null;    
+
+    const likeButton = document.getElementById("likeButton");    
+    likeButton.disabled = true; // disable until ready    
+
+    // Anonymous login immediately    
     signInAnonymously(auth).catch((error) => {    
         console.error("Anonymous sign-in error:", error);    
     });    
 
-    let currentUid = null;    
-
+    // When user is ready, enable button    
     onAuthStateChanged(auth, (user) => {    
         if (user) {    
             currentUid = user.uid;    
-            console.log("Signed in anonymously as:", currentUid);    
+            console.log("Anon UID:", currentUid);    
+            likeButton.disabled = false;    
         }    
     });    
 
     // Reference to likes node    
     const likesRef = ref(db, "likes");    
 
-    // Realtime like count listener    
+    // Realtime like count    
     onValue(likesRef, (snapshot) => {    
         const data = snapshot.val() || {};    
         const count = Object.keys(data).length;    
         document.getElementById("likeCount").innerText = count;    
     });    
 
-    // Like button click    
+    // Like button action    
     window.likePost = function () {    
-        const likeButton = document.getElementById("likeButton");    
-        const likeCountSpan = document.getElementById("likeCount");    
-
-        if (!currentUid) {    
-            alert("Error: User not signed in yet. Please try again.");    
-            return;    
-        }    
+        if (!currentUid) return;  // should never happen now    
 
         const userLikeRef = ref(db, "likes/" + currentUid);    
 
-        // Check if already liked    
         get(userLikeRef).then((snapshot) => {    
             if (snapshot.exists()) {    
                 // Already liked    
                 likeButton.classList.add("shake");    
                 setTimeout(() => likeButton.classList.remove("shake"), 500);    
-                alert(" Samartha gs Oops! You've already liked ❤️‍🔥 Thanks for your support! 🙌😊");    
+                alert("Oops! You've already liked ❤️‍🔥 Thanks for your support! 🙌😊");    
             } else {    
-                // Store like in database    
                 set(userLikeRef, true).then(() => {    
-                    // Floating heart animation    
+                    // Floating heart    
                     const heart = document.createElement("div");    
                     heart.classList.add("floating-heart");    
                     heart.innerHTML = "+1 ❤️‍🔥";    
-
                     const rect = likeButton.getBoundingClientRect();    
                     heart.style.left = `${rect.left + rect.width / 2}px`;    
                     heart.style.top = `${rect.top - 10}px`;    
-
                     document.body.appendChild(heart);    
                     setTimeout(() => heart.remove(), 1500);    
 
-                    // Ripple effect    
+                    // Ripple    
                     showRippleEffect(likeButton);    
                 });    
             }    
@@ -574,11 +569,9 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
     function showRippleEffect(button) {    
         const ripple = document.createElement("span");    
         ripple.classList.add("ripple");    
-
         const rect = button.getBoundingClientRect();    
         ripple.style.left = `${rect.width / 2}px`;    
         ripple.style.top = `${rect.height / 2}px`;    
-
         button.appendChild(ripple);    
         setTimeout(() => ripple.remove(), 600);    
     }    
