@@ -481,115 +481,96 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
     </script>  
   
   
-  <script type="module">    
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";    
-    import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-database.js";    
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";    
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";    
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";    
+  import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-database.js";    
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";    
 
-    // Updated Firebase configuration    
-    const firebaseConfig = {    
-        apiKey: "AIzaSyD6XevtiU5_5T3qsPrrgZNrcTXOUcI_jaY",    
-        authDomain: "sammu-database.firebaseapp.com",    
-        databaseURL: "https://sammu-database-default-rtdb.asia-southeast1.firebasedatabase.app",    
-        projectId: "sammu-database",    
-        storageBucket: "sammu-database.firebasestorage.app",    
-        messagingSenderId: "975899243226",    
-        appId: "1:975899243226:web:c81d3263a3e30a271a6be3",    
-        measurementId: "G-B85J29F4RB"    
-    };    
+  // Firebase config    
+  const firebaseConfig = {    
+    apiKey: "AIzaSyD6XevtiU5_5T3qsPrrgZNrcTXOUcI_jaY",    
+    authDomain: "sammu-database.firebaseapp.com",    
+    databaseURL: "https://sammu-database-default-rtdb.asia-southeast1.firebasedatabase.app",    
+    projectId: "sammu-database",    
+    storageBucket: "sammu-database.firebasestorage.app",    
+    messagingSenderId: "975899243226",    
+    appId: "1:975899243226:web:c81d3263a3e30a271a6be3",    
+    measurementId: "G-B85J29F4RB"    
+  };    
 
-    // Initialize Firebase    
-    const app = initializeApp(firebaseConfig);    
-    const db = getDatabase(app);    
-    const analytics = getAnalytics(app);    
-    const auth = getAuth(app);
+  // Initialize Firebase    
+  const app = initializeApp(firebaseConfig);    
+  const db = getDatabase(app);    
+  const analytics = getAnalytics(app);    
 
-    let currentUid = null;
+  // Reference to likes
+  const likeRef = ref(db, "likes");
 
-    // Sign in anonymously
-    signInAnonymously(auth).catch((error) => {
-        console.error("Auth error:", error);
-    });
+  // Load FingerprintJS
+  const fpPromise = import("https://openfpcdn.io/fingerprintjs/v4").then(FingerprintJS => FingerprintJS.load());
 
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            currentUid = user.uid;
-            console.log("Signed in as:", currentUid);
-        }
-    });
+  let deviceId = null;
 
-    // Reference to the likes node    
-    const likeRef = ref(db, "likes");    
+  fpPromise.then(fp => fp.get()).then(result => {
+    deviceId = result.visitorId;
+    console.log("Device Fingerprint ID:", deviceId);
+  });
 
-    // Listen for changes and update the like count    
-    onValue(likeRef, (snapshot) => {    
-        const likes = snapshot.val() || {};    
-        document.getElementById("likeCount").innerText = Object.keys(likes).length;    
-    });    
+  // Realtime like count
+  onValue(likeRef, (snapshot) => {    
+    const likes = snapshot.val() || {};    
+    document.getElementById("likeCount").innerText = Object.keys(likes).length;    
+  });    
 
-    window.likePost = function () {    
-        const likeButton = document.getElementById("likeButton");    
-        const likeCountSpan = document.getElementById("likeCount");    
+  // Like button logic
+  window.likePost = function () {    
+    const likeButton = document.getElementById("likeButton");    
 
-        if (!currentUid) {
-            alert("Please wait... user not ready yet!");
-            return;
-        }
+    if (!deviceId) {
+      alert("Please wait... fingerprint not ready yet!");
+      return;
+    }
 
-        const userLikeRef = ref(db, "likes/" + currentUid);
+    const userLikeRef = ref(db, "likes/" + deviceId);
 
-        get(userLikeRef).then((snap) => {
-            if (snap.exists()) {
-                // Already liked → show shake
-                likeButton.classList.add("shake");    
-                setTimeout(() => {    
-                    likeButton.classList.remove("shake");    
-                }, 500);    
-                alert("Oops! You've already liked ❤️‍🔥 Thanks for your support! 🙌😊");    
-            } else {
-                // Store like in Firebase
-                set(userLikeRef, true).then(() => {
-                    // Create floating heart animation    
-                    const heart = document.createElement("div");    
-                    heart.classList.add("floating-heart");    
-                    heart.innerHTML = "+1 ❤️‍🔥";    
+    get(userLikeRef).then((snap) => {
+      if (snap.exists()) {
+        // Already liked → show shake
+        likeButton.classList.add("shake");    
+        setTimeout(() => { likeButton.classList.remove("shake"); }, 500);    
+        alert("SammuOops! You've already liked ❤️‍🔥 Thanks for your support! 🙌😊");    
+      } else {
+        // Store like in Firebase
+        set(userLikeRef, true).then(() => {
+          // Floating heart
+          const heart = document.createElement("div");    
+          heart.classList.add("floating-heart");    
+          heart.innerHTML = "+1 ❤️‍🔥";    
+          const rect = likeButton.getBoundingClientRect();    
+          heart.style.left = `${rect.left + rect.width / 2}px`;    
+          heart.style.top = `${rect.top - 10}px`;    
+          document.body.appendChild(heart);    
+          setTimeout(() => { heart.remove(); }, 1500);    
 
-                    // Position the heart above the button    
-                    const rect = likeButton.getBoundingClientRect();    
-                    heart.style.left = `${rect.left + rect.width / 2}px`;    
-                    heart.style.top = `${rect.top - 10}px`;    
-
-                    document.body.appendChild(heart);    
-
-                    setTimeout(() => {    
-                        heart.remove();    
-                    }, 1500);    
-
-                    // Trigger ripple effect    
-                    showRippleEffect(likeButton);    
-                });
-            }
+          // Ripple effect
+          showRippleEffect(likeButton);
         });
-    };    
+      }
+    });
+  };    
 
-    // Function to create ripple effect    
-    function showRippleEffect(button) {    
-        const ripple = document.createElement("span");    
-        ripple.classList.add("ripple");    
-
-        // Get button position    
-        const rect = button.getBoundingClientRect();    
-        ripple.style.left = `${rect.width / 2}px`;    
-        ripple.style.top = `${rect.height / 2}px`;    
-
-        button.appendChild(ripple);    
-
-        setTimeout(() => {    
-            ripple.remove();    
-        }, 600); // Remove after animation    
-    }    
+  // Ripple effect
+  function showRippleEffect(button) {    
+    const ripple = document.createElement("span");    
+    ripple.classList.add("ripple");    
+    const rect = button.getBoundingClientRect();    
+    ripple.style.left = `${rect.width / 2}px`;    
+    ripple.style.top = `${rect.height / 2}px`;    
+    button.appendChild(ripple);    
+    setTimeout(() => { ripple.remove(); }, 600);    
+  }    
 </script>
+
 
 
 
