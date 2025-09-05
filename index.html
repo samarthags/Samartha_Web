@@ -483,7 +483,7 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
   
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";    
-  import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-database.js";    
+  import { getDatabase, ref, onValue, set, get, runTransaction } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-database.js";    
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";    
 
   // Firebase config    
@@ -503,23 +503,30 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
   const db = getDatabase(app);    
   const analytics = getAnalytics(app);    
 
-  // Reference to likes
-  const likeRef = ref(db, "likes");
-
   // Load FingerprintJS
   const fpPromise = import("https://openfpcdn.io/fingerprintjs/v4").then(FingerprintJS => FingerprintJS.load());
-
   let deviceId = null;
 
   fpPromise.then(fp => fp.get()).then(result => {
     deviceId = result.visitorId;
     console.log("Device Fingerprint ID:", deviceId);
+
+    // ✅ Record view when page loads
+    const userViewRef = ref(db, "viewUsers/" + deviceId);
+    get(userViewRef).then((snap) => {
+      if (!snap.exists()) {
+        set(userViewRef, true);
+        runTransaction(ref(db, "views"), (current) => (current || 0) + 1);
+      }
+    });
   });
 
+  // ---------------------- LIKES ----------------------
+  const likeCountRef = ref(db, "likes");
+
   // Realtime like count
-  onValue(likeRef, (snapshot) => {    
-    const likes = snapshot.val() || {};    
-    document.getElementById("likeCount").innerText = Object.keys(likes).length;    
+  onValue(likeCountRef, (snapshot) => {    
+    document.getElementById("likeCount").innerText = snapshot.val() || 0;    
   });    
 
   // Like button logic
@@ -527,34 +534,35 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
     const likeButton = document.getElementById("likeButton");    
 
     if (!deviceId) {
-      alert("Please wait... fingerprint not ready yet!");
+      alert("Please wait...samwebserver");
       return;
     }
 
-    const userLikeRef = ref(db, "likes/" + deviceId);
+    const userLikeRef = ref(db, "likeUsers/" + deviceId);
 
     get(userLikeRef).then((snap) => {
       if (snap.exists()) {
-        // Already liked → show shake
         likeButton.classList.add("shake");    
         setTimeout(() => { likeButton.classList.remove("shake"); }, 500);    
-        alert("SammuOops! You've already liked ❤️‍🔥 Thanks for your support! 🙌😊");    
+        alert("Oops! You've already liked ❤️‍🔥 Thanks for your support! 🙌😊");    
       } else {
-        // Store like in Firebase
-        set(userLikeRef, true).then(() => {
-          // Floating heart
-          const heart = document.createElement("div");    
-          heart.classList.add("floating-heart");    
-          heart.innerHTML = "+1 ❤️‍🔥";    
-          const rect = likeButton.getBoundingClientRect();    
-          heart.style.left = `${rect.left + rect.width / 2}px`;    
-          heart.style.top = `${rect.top - 10}px`;    
-          document.body.appendChild(heart);    
-          setTimeout(() => { heart.remove(); }, 1500);    
+        // Mark user as liked
+        set(userLikeRef, true);
+        // Increase like count
+        runTransaction(likeCountRef, (current) => (current || 0) + 1);
 
-          // Ripple effect
-          showRippleEffect(likeButton);
-        });
+        // Floating heart
+        const heart = document.createElement("div");    
+        heart.classList.add("floating-heart");    
+        heart.innerHTML = "+1 ❤️‍🔥";    
+        const rect = likeButton.getBoundingClientRect();    
+        heart.style.left = `${rect.left + rect.width / 2}px`;    
+        heart.style.top = `${rect.top - 10}px`;    
+        document.body.appendChild(heart);    
+        setTimeout(() => { heart.remove(); }, 1500);    
+
+        // Ripple effect
+        showRippleEffect(likeButton);
       }
     });
   };    
@@ -570,9 +578,6 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
     setTimeout(() => { ripple.remove(); }, 600);    
   }    
 </script>
-
-
-
 
 
   </body>  </html>  
