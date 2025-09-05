@@ -483,117 +483,106 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
   
   <script type="module">    
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";    
-import { getDatabase, ref, onValue, runTransaction, get } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-database.js";    
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";    
-  
-// Updated Firebase configuration    
-const firebaseConfig = {    
-    apiKey: "AIzaSyD6XevtiU5_5T3qsPrrgZNrcTXOUcI_jaY",    
-    authDomain: "sammu-database.firebaseapp.com",    
-    databaseURL: "https://sammu-database-default-rtdb.asia-southeast1.firebasedatabase.app",    
-    projectId: "sammu-database",    
-    storageBucket: "sammu-database.firebasestorage.app",    
-    messagingSenderId: "975899243226",    
-    appId: "1:975899243226:web:c81d3263a3e30a271a6be3",    
-    measurementId: "G-B85J29F4RB"    
-};    
-  
-// Initialize Firebase    
-const app = initializeApp(firebaseConfig);    
-const db = getDatabase(app);    
-const analytics = getAnalytics(app);    
-  
-// Reference to the likes node    
-const likeRef = ref(db, "likes");    
-  
-// Fetch initial like count before setting up real-time updates    
-get(likeRef).then((snapshot) => {    
-    if (snapshot.exists()) {    
-        document.getElementById("likeCount").innerText = snapshot.val();    
-    }    
-});    
-  
-// Listen for changes and update the like count    
-onValue(likeRef, (snapshot) => {    
-    const likes = snapshot.val();    
-    if (likes !== null) {    
-        document.getElementById("likeCount").innerText = likes;    
-    }    
-});    
-  
-window.likePost = function () {    
-    const likeButton = document.getElementById("likeButton");    
-    const likeCountSpan = document.getElementById("likeCount");    
-    let hasLiked = localStorage.getItem("hasLiked") === "true";    
-  
-    if (hasLiked) {    
-        // Shake animation if already liked    
-        likeButton.classList.add("shake");    
-        setTimeout(() => {    
-            likeButton.classList.remove("shake");    
-        }, 500);    
-  
-        alert("Oops! You've already liked ❤️‍🔥 Thanks for your support! 🙌😊");    
-        return;    
-    }    
-  
-    // Store in local storage to prevent multiple likes    
-    localStorage.setItem("hasLiked", "true");    
-  
-    // Create floating heart animation    
-    const heart = document.createElement("div");    
-    heart.classList.add("floating-heart");    
-    heart.innerHTML = "+1 ❤️‍🔥";    
-  
-    // Position the heart above the button    
-    const rect = likeButton.getBoundingClientRect();    
-    heart.style.left = `${rect.left + rect.width / 2}px`;    
-    heart.style.top = `${rect.top - 10}px`;    
-  
-    document.body.appendChild(heart);    
-  
-    setTimeout(() => {    
-        heart.remove();    
-    }, 1500);    
-  
-    // Trigger ripple effect on every click    
-    showRippleEffect(likeButton);    
-  
-    // Disable button temporarily    
-    likeButton.disabled = true;    
-  
-    // Update Firebase like count    
-    runTransaction(likeRef, (currentLikes) => {    
-        return (currentLikes || 0) + 1;    
-    })    
-    .then(({ snapshot }) => {    
-        likeCountSpan.textContent = snapshot.val(); // Fixes object issue    
-        likeButton.disabled = false;    
-    })    
-    .catch((error) => {    
-        console.error("Error updating likes:", error);    
-        likeButton.disabled = false;    
-    });    
-};    
-  
-// Function to create ripple effect    
-function showRippleEffect(button) {    
-    const ripple = document.createElement("span");    
-    ripple.classList.add("ripple");    
-  
-    // Get button position    
-    const rect = button.getBoundingClientRect();    
-    ripple.style.left = `${rect.width / 2}px`;    
-    ripple.style.top = `${rect.height / 2}px`;    
-  
-    button.appendChild(ripple);    
-  
-    setTimeout(() => {    
-        ripple.remove();    
-    }, 600); // Remove after animation    
-}    
-</script>    
+    import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-database.js";    
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";    
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";    
 
+    // Firebase config    
+    const firebaseConfig = {    
+        apiKey: "AIzaSyD6XevtiU5_5T3qsPrrgZNrcTXOUcI_jaY",    
+        authDomain: "sammu-database.firebaseapp.com",    
+        databaseURL: "https://sammu-database-default-rtdb.asia-southeast1.firebasedatabase.app",    
+        projectId: "sammu-database",    
+        storageBucket: "sammu-database.firebasestorage.app",    
+        messagingSenderId: "975899243226",    
+        appId: "1:975899243226:web:c81d3263a3e30a271a6be3",    
+        measurementId: "G-B85J29F4RB"    
+    };    
+
+    // Initialize Firebase    
+    const app = initializeApp(firebaseConfig);    
+    const db = getDatabase(app);    
+    const analytics = getAnalytics(app);    
+    const auth = getAuth(app);    
+
+    // Ensure user has an anonymous account    
+    signInAnonymously(auth).catch((error) => {    
+        console.error("Anonymous sign-in error:", error);    
+    });    
+
+    let currentUid = null;    
+
+    onAuthStateChanged(auth, (user) => {    
+        if (user) {    
+            currentUid = user.uid;    
+            console.log("Signed in anonymously as:", currentUid);    
+        }    
+    });    
+
+    // Reference to likes node    
+    const likesRef = ref(db, "likes");    
+
+    // Realtime like count listener    
+    onValue(likesRef, (snapshot) => {    
+        const data = snapshot.val() || {};    
+        const count = Object.keys(data).length;    
+        document.getElementById("likeCount").innerText = count;    
+    });    
+
+    // Like button click    
+    window.likePost = function () {    
+        const likeButton = document.getElementById("likeButton");    
+        const likeCountSpan = document.getElementById("likeCount");    
+
+        if (!currentUid) {    
+            alert("Error: User not signed in yet. Please try again.");    
+            return;    
+        }    
+
+        const userLikeRef = ref(db, "likes/" + currentUid);    
+
+        // Check if already liked    
+        get(userLikeRef).then((snapshot) => {    
+            if (snapshot.exists()) {    
+                // Already liked    
+                likeButton.classList.add("shake");    
+                setTimeout(() => likeButton.classList.remove("shake"), 500);    
+                alert(" Samartha gs Oops! You've already liked ❤️‍🔥 Thanks for your support! 🙌😊");    
+            } else {    
+                // Store like in database    
+                set(userLikeRef, true).then(() => {    
+                    // Floating heart animation    
+                    const heart = document.createElement("div");    
+                    heart.classList.add("floating-heart");    
+                    heart.innerHTML = "+1 ❤️‍🔥";    
+
+                    const rect = likeButton.getBoundingClientRect();    
+                    heart.style.left = `${rect.left + rect.width / 2}px`;    
+                    heart.style.top = `${rect.top - 10}px`;    
+
+                    document.body.appendChild(heart);    
+                    setTimeout(() => heart.remove(), 1500);    
+
+                    // Ripple effect    
+                    showRippleEffect(likeButton);    
+                });    
+            }    
+        });    
+    };    
+
+    // Ripple effect    
+    function showRippleEffect(button) {    
+        const ripple = document.createElement("span");    
+        ripple.classList.add("ripple");    
+
+        const rect = button.getBoundingClientRect();    
+        ripple.style.left = `${rect.width / 2}px`;    
+        ripple.style.top = `${rect.height / 2}px`;    
+
+        button.appendChild(ripple);    
+        setTimeout(() => ripple.remove(), 600);    
+    }    
+</script>
 
 
 
