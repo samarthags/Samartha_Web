@@ -487,7 +487,7 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";    
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";    
 
-    // Firebase config    
+    // Updated Firebase configuration    
     const firebaseConfig = {    
         apiKey: "AIzaSyD6XevtiU5_5T3qsPrrgZNrcTXOUcI_jaY",    
         authDomain: "sammu-database.firebaseapp.com",    
@@ -503,84 +503,91 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
     const app = initializeApp(firebaseConfig);    
     const db = getDatabase(app);    
     const analytics = getAnalytics(app);    
-    const auth = getAuth(app);    
+    const auth = getAuth(app);
 
-    // Ensure user has an anonymous account    
-    signInAnonymously(auth).catch((error) => {    
-        console.error("Anonymous sign-in error:", error);    
+    let currentUid = null;
+
+    // Sign in anonymously
+    signInAnonymously(auth).catch((error) => {
+        console.error("Auth error:", error);
+    });
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUid = user.uid;
+            console.log("Signed in as:", currentUid);
+        }
+    });
+
+    // Reference to the likes node    
+    const likeRef = ref(db, "likes");    
+
+    // Listen for changes and update the like count    
+    onValue(likeRef, (snapshot) => {    
+        const likes = snapshot.val() || {};    
+        document.getElementById("likeCount").innerText = Object.keys(likes).length;    
     });    
 
-    let currentUid = null;    
-
-    onAuthStateChanged(auth, (user) => {    
-        if (user) {    
-            currentUid = user.uid;    
-            console.log("Signed in anonymously as:", currentUid);    
-        }    
-    });    
-
-    // Reference to likes node    
-    const likesRef = ref(db, "likes");    
-
-    // Realtime like count listener    
-    onValue(likesRef, (snapshot) => {    
-        const data = snapshot.val() || {};    
-        const count = Object.keys(data).length;    
-        document.getElementById("likeCount").innerText = count;    
-    });    
-
-    // Like button click    
     window.likePost = function () {    
         const likeButton = document.getElementById("likeButton");    
         const likeCountSpan = document.getElementById("likeCount");    
 
-        if (!currentUid) {    
-            alert("Error: User not signed in yet. Please try again.");    
-            return;    
-        }    
+        if (!currentUid) {
+            alert("Please wait... user not ready yet!");
+            return;
+        }
 
-        const userLikeRef = ref(db, "likes/" + currentUid);    
+        const userLikeRef = ref(db, "likes/" + currentUid);
 
-        // Check if already liked    
-        get(userLikeRef).then((snapshot) => {    
-            if (snapshot.exists()) {    
-                // Already liked    
+        get(userLikeRef).then((snap) => {
+            if (snap.exists()) {
+                // Already liked → show shake
                 likeButton.classList.add("shake");    
-                setTimeout(() => likeButton.classList.remove("shake"), 500);    
+                setTimeout(() => {    
+                    likeButton.classList.remove("shake");    
+                }, 500);    
                 alert("Oops! You've already liked ❤️‍🔥 Thanks for your support! 🙌😊");    
-            } else {    
-                // Store like in database    
-                set(userLikeRef, true).then(() => {    
-                    // Floating heart animation    
+            } else {
+                // Store like in Firebase
+                set(userLikeRef, true).then(() => {
+                    // Create floating heart animation    
                     const heart = document.createElement("div");    
                     heart.classList.add("floating-heart");    
                     heart.innerHTML = "+1 ❤️‍🔥";    
 
+                    // Position the heart above the button    
                     const rect = likeButton.getBoundingClientRect();    
                     heart.style.left = `${rect.left + rect.width / 2}px`;    
                     heart.style.top = `${rect.top - 10}px`;    
 
                     document.body.appendChild(heart);    
-                    setTimeout(() => heart.remove(), 1500);    
 
-                    // Ripple effect    
+                    setTimeout(() => {    
+                        heart.remove();    
+                    }, 1500);    
+
+                    // Trigger ripple effect    
                     showRippleEffect(likeButton);    
-                });    
-            }    
-        });    
+                });
+            }
+        });
     };    
 
-    // Ripple effect    
+    // Function to create ripple effect    
     function showRippleEffect(button) {    
         const ripple = document.createElement("span");    
         ripple.classList.add("ripple");    
 
+        // Get button position    
         const rect = button.getBoundingClientRect();    
         ripple.style.left = `${rect.width / 2}px`;    
         ripple.style.top = `${rect.height / 2}px`;    
 
         button.appendChild(ripple);    
-        setTimeout(() => ripple.remove(), 600);    
+
+        setTimeout(() => {    
+            ripple.remove();    
+        }, 600); // Remove after animation    
     }    
 </script>
 
