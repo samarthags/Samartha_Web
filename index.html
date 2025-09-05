@@ -481,7 +481,7 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
     </script>  
   
   
-  <script type="module">
+ <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";    
   import { getDatabase, ref, onValue, set, get, runTransaction } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-database.js";    
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";    
@@ -511,11 +511,34 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
     deviceId = result.visitorId;
     console.log("Device Fingerprint ID:", deviceId);
 
-    // ✅ Record view when page loads
+    // Detect referrer info
+    const referrer = document.referrer || "direct";
+    const userAgent = navigator.userAgent || "unknown";
+
+    let platform = "other";
+
+    // Basic check for Instagram, Snapchat, Facebook, Twitter, etc.
+    if (/Instagram/i.test(userAgent)) {
+        platform = "Instagram";
+    } else if (/Snapchat/i.test(userAgent)) {
+        platform = "Snapchat";
+    } else if (/FBAV/i.test(userAgent)) { // Facebook in-app browser
+        platform = "Facebook";
+    } else if (/Twitter/i.test(userAgent)) {
+        platform = "Twitter";
+    } else if (/Chrome|Firefox|Safari|Edge|Opera/i.test(userAgent)) {
+        platform = "Browser";
+    }
+
+    // ---------------------- VIEWS ----------------------
     const userViewRef = ref(db, "viewUsers/" + deviceId);
     get(userViewRef).then((snap) => {
       if (!snap.exists()) {
-        set(userViewRef, true);
+        set(userViewRef, {
+            visitedAt: new Date().toISOString(),
+            referrer: referrer,
+            platform: platform
+        });
         runTransaction(ref(db, "views"), (current) => (current || 0) + 1);
       }
     });
@@ -534,8 +557,23 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
     const likeButton = document.getElementById("likeButton");    
 
     if (!deviceId) {
-      alert("Please wait...samwebserver");
+      alert("Please wait... Samartha's  not ready yet!");
       return;
+    }
+
+    // Detect platform again for likes
+    const userAgent = navigator.userAgent || "unknown";
+    let platform = "other";
+    if (/Instagram/i.test(userAgent)) {
+        platform = "Instagram";
+    } else if (/Snapchat/i.test(userAgent)) {
+        platform = "Snapchat";
+    } else if (/FBAV/i.test(userAgent)) {
+        platform = "Facebook";
+    } else if (/Twitter/i.test(userAgent)) {
+        platform = "Twitter";
+    } else if (/Chrome|Firefox|Safari|Edge|Opera/i.test(userAgent)) {
+        platform = "Browser";
     }
 
     const userLikeRef = ref(db, "likeUsers/" + deviceId);
@@ -546,8 +584,12 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
         setTimeout(() => { likeButton.classList.remove("shake"); }, 500);    
         alert("Oops! You've already liked ❤️‍🔥 Thanks for your support! 🙌😊");    
       } else {
-        // Mark user as liked
-        set(userLikeRef, true);
+        // Mark user as liked with platform info
+        set(userLikeRef, {
+            likedAt: new Date().toISOString(),
+            platform: platform
+        });
+
         // Increase like count
         runTransaction(likeCountRef, (current) => (current || 0) + 1);
 
@@ -578,7 +620,6 @@ webpushr('setup',{'key':'BHj-Cu4KkNzKmV6Ouy2GOhCUQ32SBr7Exe8cFvg2j5aAzPVrfJDTPgG
     setTimeout(() => { ripple.remove(); }, 600);    
   }    
 </script>
-
 
   </body>  </html>  
   
